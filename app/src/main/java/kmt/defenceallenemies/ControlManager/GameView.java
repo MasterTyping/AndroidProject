@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import kmt.defenceallenemies.GameScene.LoadState;
 import kmt.defenceallenemies.GameScene.TitleState;
 
 /**
@@ -29,7 +30,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         AppManager.getInstance().setResources(getResources());
         AppManager.getInstance().setSize(getWidth(), getHeight());
 
-        ChangeGameState(new TitleState());
+        ChangeGameState(new LoadState());
 
         getHolder().addCallback(this);
         _thread = new GameViewThread(getHolder(),this);

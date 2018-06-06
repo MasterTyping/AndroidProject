@@ -5,19 +5,19 @@ import android.graphics.Rect;
 
 import kmt.defenceallenemies.ControlManager.AppManager;
 import kmt.defenceallenemies.ControlManager.GraphicObject;
+import kmt.defenceallenemies.R;
 
 /**
  * Created by Sonic on 2018-05-15.
  */
 
-public class button {
+public class button extends GraphicObject{
     private CollisionBox cBox;
-    private GraphicObject image;
     private int xSize,ySize;
-    public button(int bitmap)
+    public button(int r)
     {
+        super(AppManager.getInstance().getBitmap(r));
         cBox = new CollisionBox();
-        image = new GraphicObject(AppManager.getInstance().getBitmap(bitmap));
         xSize = 0;
         ySize = 0;
     }
@@ -27,19 +27,21 @@ public class button {
         xSize = x;
         ySize = y;
     }
+    public void Setbitmap(int r)
+    {
+    }
     public Rect GetBox()
     {
         return cBox.GetBox();
     }
     public void SetPosition(int x,int y)
     {
-        image.SetPosition(x,y);
-
+        super.SetPosition(x,y);
         cBox.SetCollideBox(x,y,xSize,ySize);
     }
     public void DrawButton(Canvas canvas)
     {
         cBox.DrawShowBox(canvas);
-        image.DrawRR(canvas,xSize,ySize);
+        super.DrawRR(canvas,xSize,ySize);
     }
 }

@@ -18,21 +18,20 @@ public class TitleState implements iState {
     private GraphicObject Title;
     private GraphicObject Titleback;
     private GraphicObject TouchScreen;
-    public static final int COL = 50;
-    public static final int ROW = 20;
-    public int Width = AppManager.getInstance().getGameView().getWidth()/COL;
-    public int Height = AppManager.getInstance().getGameView().getHeight()/ROW;
+    public static final int COL = 60;
+    public static final int ROW = 30;
+    private int Width,Height;
     @Override
     public void Init() {
 
-
-
+        Width = AppManager.getInstance().getGameView().getWidth()/COL;
+        Height = AppManager.getInstance().getGameView().getHeight()/ROW;
         Title = new GraphicObject(AppManager.getInstance().getBitmap(R.drawable.titlename));
+        Title.SetPosition(Width*15,Height*6);
         Titleback = new GraphicObject(AppManager.getInstance().getBitmap(R.drawable.title));
-        TouchScreen = new GraphicObject(AppManager.getInstance().getBitmap(R.drawable.toucj));
-        Title.SetPosition(Width*15,Height*5);
-        TouchScreen.SetPosition(800,750);
         Titleback.SetPosition(0,0);
+        TouchScreen = new GraphicObject(AppManager.getInstance().getBitmap(R.drawable.toucj));
+        TouchScreen.SetPosition(Width*20,Height*20);
     }
 
     @Override
@@ -48,8 +47,8 @@ public class TitleState implements iState {
     @Override
     public void Render(Canvas canvas) {
         Titleback.DrawExtend(canvas);
-        Title.DrawRR(canvas,Width*20,Height*3);
-        TouchScreen.DrawRR(canvas,AppManager.getInstance().getGameView().getWidth()/3,AppManager.getInstance().getGameView().getHeight()/5);
+        Title.DrawRR(canvas,Width*30,Height*10);
+        TouchScreen.DrawRR(canvas,Width*20,Height*5);
     }
 
     @Override

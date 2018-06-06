@@ -62,7 +62,7 @@ public class PlayingState implements iState {
         UI.SetPosition(0,Height*16);
         bg1.SetMaxFilm(Width*50);
         bg2.SetMaxFilm(Width*50);
-        player.InitSprite(cSize,5,4,3);
+        player.InitSprite(cSize,5,4,10);
         player.sethFrame(2);
 
 
@@ -145,7 +145,7 @@ public class PlayingState implements iState {
     }
     public void MakeMisslie()
     {
-        if(System.currentTimeMillis() - lastShootedMissile>=1700)
+        if(System.currentTimeMillis() - lastShootedMissile>=1500)
         {
 
             lastShootedMissile = System.currentTimeMillis();
