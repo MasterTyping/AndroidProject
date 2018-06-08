@@ -1,8 +1,14 @@
 package kmt.defenceallenemies.GameScene;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+
+import junit.framework.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -15,46 +21,49 @@ import kmt.defenceallenemies.GameFactor.Missile;
 import kmt.defenceallenemies.GameFactor.Monster;
 import kmt.defenceallenemies.GameFactor.Player;
 import kmt.defenceallenemies.GameFactor.background;
+import kmt.defenceallenemies.GameFactor.button;
 import kmt.defenceallenemies.R;
+
+import static java.lang.String.*;
 
 /**
  * Created by Sonic on 2018-04-12.
  */
 
 public class PlayingState implements iState {
-
+    private Paint font = new Paint();
     private static final int COL = 50;
     private static final int ROW = 20;
     private int Width = AppManager.getInstance().getGameView().getWidth()/COL;
     private int Height = AppManager.getInstance().getGameView().getHeight()/ROW;
     private int ShootCount =0;
-    private Player player;
+    public static CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<Player>();
     private GraphicObject UI;
     private int cSize;
-    private background bg1,bg2;
+    private background bg1 = new background(Width*50,Height*16);
+    private background bg2 = new background(Width*50,Height*16);
     private CopyOnWriteArrayList<Missile> Missiles = new CopyOnWriteArrayList<Missile>();
     private CopyOnWriteArrayList<Monster> Monsters = new CopyOnWriteArrayList<Monster>();
     private CopyOnWriteArrayList<SpriteObject>Boom  = new CopyOnWriteArrayList<SpriteObject>();
     private final static int MissileNum = 20;
     private int countMissile =0;
     private int MonsterCount =0;
-
+    public static int pCounter = 0;
     private long lastRegenMonster = System.currentTimeMillis();
     private long lastShootedMissile = System.currentTimeMillis();
-
+    private long lastEffect = System.currentTimeMillis();
+    private long lastboom = System.currentTimeMillis();
+    private button exit = new button(R.drawable.button_back);
+    private CopyOnWriteArrayList<SpriteObject>Shoot = new CopyOnWriteArrayList<SpriteObject>();
     @Override
     public void Init() {
 
-        cSize = 200;
-
+        cSize = Width*5;
+        font.setAntiAlias(true);
+        font.setColor(Color.BLACK);
         //init bmp data
-        player = new Player();
 
         UI = new GraphicObject(AppManager.getInstance().getBitmap(R.drawable.ui));
-        bg1 = new background(AppManager.getInstance().getBitmap(R.drawable.bground),Width*52,Height*16);
-        bg2 = new background(AppManager.getInstance().getBitmap(R.drawable.bground),Width*52,Height*16);
-
-        player.SetPosSprite(Width*4,Height*16-cSize);
 
 
         bg1.SetPosition(0,0);
@@ -62,30 +71,34 @@ public class PlayingState implements iState {
         UI.SetPosition(0,Height*16);
         bg1.SetMaxFilm(Width*50);
         bg2.SetMaxFilm(Width*50);
-        player.InitSprite(cSize,5,4,10);
-        player.sethFrame(2);
 
-
-
+        for(int i =0;i<players.size();i++)
+        {
+            players.get(i).SetPosSprite(Width*4+(Width*2*i),Height*16-cSize);
+        }
+        exit.SetButtonSize(Width*3,Height*1);
+        exit.SetPosition(Width*45,Height*17);
     }
 
     @Override
     public void Destroy() {
-
+        for(Player p:players)
+            players.remove(p);
     }
-    public void GotoMonster()
-    {
 
-    }
     @Override
     public void Update() {
+
         long GameTime = System.currentTimeMillis();
-        player.update(GameTime);
+        for(Player player:players)
+            player.update(GameTime);
         bg1.update();
         bg2.update();
         MakeMonster();
+
         MakeMisslie();
         DeleteMonster();
+        DeleteBoom();
         for(Monster monster:Monsters)
         {
             monster.update(GameTime);
@@ -111,8 +124,25 @@ public class PlayingState implements iState {
                 return;
             }
         }
+        for(SpriteObject shoot:Shoot)
+        {
+            shoot.update(GameTime);
+        }
+        for(SpriteObject boom:Boom)
+        {
+            boom.update(GameTime);
+        }
     }
 
+    public void DeleteBoom()
+    {
+        if(System.currentTimeMillis() - lastboom>=500) {
+            lastboom = System.currentTimeMillis();
+            for (SpriteObject boom : Boom) {
+                Boom.remove(boom);
+            }
+        }
+    }
     public void DeleteMonster()
     {
         for(Missile missile:Missiles)
@@ -125,6 +155,14 @@ public class PlayingState implements iState {
                     Mon.HP -=1;
                     if(Mon.HP<=0)
                         Monsters.remove(Mon);
+                    SpriteObject beffect = new SpriteObject(AppManager.getInstance().getBitmap(R.drawable.boomeffect));
+                    beffect.SetCOLROWS(5,1);
+                    beffect.setSize(Width*5);
+                    beffect.setFps(10);
+                    beffect.Setwh(AppManager.getInstance().getBitmap(R.drawable.shooteffect).getWidth()/5,AppManager.getInstance().getBitmap(R.drawable.shooteffect).getHeight());
+                    beffect.SetPosSprite(Mon.getX(), Mon.getY());
+
+                    Boom.add(beffect);
                     return;
                 }
             }
@@ -132,7 +170,7 @@ public class PlayingState implements iState {
     }
     public void MakeMonster()
     {
-        if(System.currentTimeMillis() - lastRegenMonster>=5000)
+        if(System.currentTimeMillis() - lastRegenMonster>=4000)
         {
 
             lastRegenMonster = System.currentTimeMillis();
@@ -143,24 +181,34 @@ public class PlayingState implements iState {
             Monsters.add(mon);
         }
     }
+
     public void MakeMisslie()
     {
-        if(System.currentTimeMillis() - lastShootedMissile>=1500)
+        if(System.currentTimeMillis() - lastShootedMissile>=1000)
         {
 
             lastShootedMissile = System.currentTimeMillis();
-            Missile mis = new Missile();
-            mis.SetSize(Width*3,Height*1);
-            mis.SetPosition(player.getX()+cSize,player.getY()+(int)(cSize*0.5));
-            Missiles.add(mis);
+
+            for(int i=0;i< players.size();i++){
+
+                Missile mis = new Missile();
+                mis.SetSize(Width*3,Height*1);
+
+                mis.SetPosition(players.get(i).getX() + cSize, players.get(i).getY() + (int) (cSize * 0.5));
+                Missiles.add(mis);
+               
+            }
+
         }
     }
     public void Render(Canvas canvas) {
 
+
         bg1.bgDraw(canvas);
         bg2.bgDraw(canvas);
         UI.DrawRR(canvas,Width*25,Height*4);
-        player.onDraw(canvas);
+        for(Player p:players)
+            p.onDraw(canvas);
         for(Missile missile:Missiles)
         {
                 missile.Missiledraw(canvas);
@@ -169,6 +217,13 @@ public class PlayingState implements iState {
         {
             monster.onDraw(canvas);
         }
+        for (SpriteObject shoot : Shoot) {
+            shoot.onDraw(canvas);
+        }
+        for (SpriteObject boom : Boom) {
+            boom.onDraw(canvas);
+        }
+        exit.DrawButton(canvas);
     }
 
     @Override
@@ -179,6 +234,8 @@ public class PlayingState implements iState {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            if(exit.GetBox().contains((int)event.getX(),(int)event.getY())==true)
+                AppManager.getInstance().getGameView().ChangeGameState(new AdjustState());
         }
 
         return false;

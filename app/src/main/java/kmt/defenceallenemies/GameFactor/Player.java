@@ -21,13 +21,16 @@ public class Player extends SpriteObject {
 
 
     private CollisionBox CollideBox;
-
-    public Player() {
-        super(AppManager.getInstance().getBitmap(R.drawable.spritedefender));
+    private int pBitmap;
+    public Player(Bitmap bitmap) {
+        super(bitmap);
         CollideBox = new CollisionBox();
         CollideBox.SetCollideBox(getX(),getY(),getSize(),getSize());
     }
+    public void ChangeImg(int re)
+    {
 
+    }
     @Override
     public void onDraw(Canvas canvas)
     {

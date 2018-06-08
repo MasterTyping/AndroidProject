@@ -17,8 +17,8 @@ public class background extends GraphicObject {
     private int xSize,ySize;
     private int MAX_FILM;
 
-    public background(Bitmap bitmap,int xsize,int ysize) {
-        super(bitmap);
+    public background(int xsize,int ysize) {
+        super(AppManager.getInstance().getBitmap(R.drawable.bground));
         xSize = xsize;
         ySize = ysize;
     }

@@ -8,6 +8,8 @@ import android.graphics.Rect;
 
 import java.util.Random;
 
+import kmt.defenceallenemies.R;
+
 /**
  * Created by Sonic on 2018-04-12.
  */
@@ -27,16 +29,24 @@ public class SpriteObject {
     protected int Size;
     protected long FrameTimer;
     protected int FPS;
+
+
+
     public void SetCOLROWS(int x,int y)
     {
-        BMP_ROWS =y;
         BMP_COLUMNS = x;
+        BMP_ROWS =y;
     }
 
-    public SpriteObject(Bitmap bmp) {
+    public SpriteObject(Bitmap bitmap) {
 
+        Bmp = bitmap;
+
+
+    }
+    public void ChangeImg(Bitmap bmp)
+    {
         Bmp = bmp;
-        //image setting
 
     }
     public void InitSprite(int size,int col,int row,int fps)
@@ -52,11 +62,15 @@ public class SpriteObject {
         this.x = x;
         this.y = y;
     }
-
-
+    public void Setwh(int w, int h) {
+        width = w;
+        height = h;
+    }
+    public void setFps(int fps){FPS = 1000/fps;;}
     public int getX(){ return x;}
     public void sethFrame(int h){hFrame =h;}
     public void setZFrame(){this.currentFrame =0;}
+    public void setSize(int s){Size=s;}
     public int getY(){ return y;}
     public int getSize(){ return Size;}
     public int GetCurruntFrame(){return currentFrame;}
@@ -64,6 +78,7 @@ public class SpriteObject {
 
 
     public void update(long GameTime) {
+
         if(GameTime> FrameTimer+FPS) {
             FrameTimer = GameTime;
             currentFrame = (++currentFrame % BMP_COLUMNS);

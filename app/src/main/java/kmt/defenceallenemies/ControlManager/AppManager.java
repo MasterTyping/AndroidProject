@@ -23,7 +23,6 @@ public class AppManager {
 
 
     // GameState
-    public TitleState m_gamestate;
 
     private int m_width;
     private int m_height;
