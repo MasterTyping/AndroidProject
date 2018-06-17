@@ -3,50 +3,36 @@ package kmt.defenceallenemies.GameFactor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import kmt.defenceallenemies.ControlManager.AppManager;
 import kmt.defenceallenemies.ControlManager.SpriteObject;
-import kmt.defenceallenemies.R;
 
 /**
- * Created by Sonic on 2018-05-24.
+ * Created by Sonic on 2018-06-16.
  */
 
 public class Monster extends SpriteObject {
 
-    private CollisionBox cbox;
-    private int xSpeed;
-    public boolean show = false;
-    public int HP = 3;
-    public Monster() {
-
-        super(AppManager.getInstance().getBitmap(R.drawable.monsters));
-        cbox = new CollisionBox();
+    int xSpeed;
+    public int HP = 5;
+    public Monster(Bitmap bitmap) {
+        super(bitmap);
         xSpeed = -3;
-        x= getX();
-        y= getY();
-        show = true;
+        FPS = 3;
+        SetCOLROWS(3,1);
+        width = bitmap.getWidth()/BMP_COLUMNS;
+        height = bitmap.getHeight()/BMP_ROWS;
     }
-    @Override
-    public void onDraw(Canvas canvas)
+    public int getSize()
     {
-        if(show){
-            super.onDraw(canvas);
-            cbox.DrawShowBox(canvas);
-        }
+        return (Bmp.getWidth()/BMP_COLUMNS);
     }
-    public CollisionBox GetCbox()
+    public void Render(Canvas canvas)
     {
-        return cbox;
+        super.onDraw(canvas);
+        //canvas.drawRect(ColBox,drawstyle);
     }
-    @Override
-    public void update(long GameTime)
+    public void Animate(long CurrentTime)
     {
-        super.update(GameTime);
-        if(show)
-        {
-            x = x+xSpeed;
-            SetPosSprite(x,y);
-            cbox.SetCollideBox(getX(),getY(),getSize(),getSize());
-        }
+        super.update(CurrentTime);
+        x += xSpeed;
     }
 }

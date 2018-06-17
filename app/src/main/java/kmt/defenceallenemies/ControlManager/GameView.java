@@ -8,8 +8,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import kmt.defenceallenemies.GameScene.LoadState;
 import kmt.defenceallenemies.GameScene.TitleState;
+
 
 /**
  * Created by Sonic on 2018-04-09.
@@ -22,6 +22,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private iState m_state;
 
 
+
     public GameView(Context context) {
         super(context);
 
@@ -30,8 +31,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         AppManager.getInstance().setResources(getResources());
         AppManager.getInstance().setSize(getWidth(), getHeight());
 
-        ChangeGameState(new LoadState());
 
+        ChangeGameState(new TitleState());
         getHolder().addCallback(this);
         _thread = new GameViewThread(getHolder(),this);
         AppManager.getInstance().setThread(_thread);

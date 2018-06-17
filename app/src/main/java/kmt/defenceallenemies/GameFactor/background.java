@@ -1,46 +1,31 @@
 package kmt.defenceallenemies.GameFactor;
 
 import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.graphics.Canvas;
 
 import kmt.defenceallenemies.ControlManager.AppManager;
 import kmt.defenceallenemies.ControlManager.GraphicObject;
-import kmt.defenceallenemies.R;
 
 /**
- * Created by Sonic on 2018-04-29.
+ * Created by Sonic on 2018-06-16.
  */
 
 public class background extends GraphicObject {
+    protected int xSpeed;
+    public background(Bitmap bitmap) {
+        super(bitmap);
+        xSpeed = 5;
 
-    private int bgX = 5;
-    private int xSize,ySize;
-    private int MAX_FILM;
-
-    public background(int xsize,int ysize) {
-        super(AppManager.getInstance().getBitmap(R.drawable.bground));
-        xSize = xsize;
-        ySize = ysize;
     }
-    public void SetBgSpeed(int sp)
+    public void Render(Canvas canvas)
     {
-        bgX = sp;
+        super.DrawResize(canvas);
     }
-
-    public void SetMaxFilm(int film)
+    public void update(long CurrentTime)
     {
-        MAX_FILM = film;
-    }
-    public void update() {
-        m_x -= bgX;
-        SetPosition(m_x,0);
-        if(m_x < -MAX_FILM){
-            SetPosition(MAX_FILM,0);
-        }
-    }
-
-    public void bgDraw(Canvas canvas)
-    {
-        super.DrawRR(canvas,xSize,ySize);
+        if(m_x<-AppManager.getInstance().getGameView().getWidth())
+            m_x=AppManager.getInstance().getGameView().getWidth();
+        m_x-=xSpeed;
     }
 }

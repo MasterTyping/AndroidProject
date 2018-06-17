@@ -23,25 +23,38 @@ public class SpriteObject {
     protected int x = 0;
     protected int y = 0;
     protected int currentFrame = 0;
-    protected int hFrame = 0;
     protected int width;
     protected int height;
-    protected int Size;
     protected long FrameTimer;
     protected int FPS;
+    protected int xSize,ySize;
 
-
-
+    public Bitmap getBmp()
+    {
+        return Bmp;
+    }
     public void SetCOLROWS(int x,int y)
     {
         BMP_COLUMNS = x;
         BMP_ROWS =y;
+        width = Bmp.getWidth()/BMP_COLUMNS;
+        height = Bmp.getHeight()/BMP_ROWS;
     }
-
+    public void SetSize(int x,int y)
+    {
+        xSize= x;
+        ySize = y;
+    }
     public SpriteObject(Bitmap bitmap) {
 
         Bmp = bitmap;
-
+        BMP_COLUMNS =5;
+        BMP_ROWS  =4;
+        width = bitmap.getWidth()/BMP_COLUMNS;
+        height = bitmap.getHeight()/BMP_ROWS;
+        FPS= 5;
+        xSize =100;
+        ySize =100;
 
     }
     public void ChangeImg(Bitmap bmp)
@@ -49,31 +62,15 @@ public class SpriteObject {
         Bmp = bmp;
 
     }
-    public void InitSprite(int size,int col,int row,int fps)
-    {
-        SetCOLROWS(col,row);
-        Size = size;
-        FPS = 1000/fps;
-        width = Bmp.getWidth() / BMP_COLUMNS;
-        height = Bmp.getHeight() / BMP_ROWS;
 
-    }
     public void SetPosSprite(int x, int y) {
         this.x = x;
         this.y = y;
     }
-    public void Setwh(int w, int h) {
-        width = w;
-        height = h;
-    }
-    public void setFps(int fps){FPS = 1000/fps;;}
+
+    public void setFps(int fps){FPS = fps;}
     public int getX(){ return x;}
-    public void sethFrame(int h){hFrame =h;}
-    public void setZFrame(){this.currentFrame =0;}
-    public void setSize(int s){Size=s;}
     public int getY(){ return y;}
-    public int getSize(){ return Size;}
-    public int GetCurruntFrame(){return currentFrame;}
     public int getBmpColumns(){return  BMP_COLUMNS;}
 
 
@@ -88,9 +85,9 @@ public class SpriteObject {
 
     public void onDraw(Canvas canvas) {
         int srcX = currentFrame * width;
-        int srcY = height*hFrame;
+        int srcY = 0;
         Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
-        Rect dst = new Rect(x, y, x + Size, y + Size);
+        Rect dst = new Rect(x, y, x + xSize, y + ySize);
         canvas.drawBitmap(Bmp, src, dst, null);
         //canvas.drawRect(dst,paint);
     }
